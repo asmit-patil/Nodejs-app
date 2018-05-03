@@ -1,0 +1,25 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ap",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^2.0.1",
+    "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
+    "ejs": "^2.5.9",
+    "express": "^4.16.3",
+    "express-flash": "0.0.2",
+    "express-mongo-db": "^2.0.4",
+    "express-session": "^1.15.6",
+    "express-validator": "^5.1.2",
+    "method-override": "^2.3.10",
+    "mongodb": "^3.0.7",
+    "mongoose": "^5.0.17"
+  }
+}

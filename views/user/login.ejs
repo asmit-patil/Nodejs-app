@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <title>Node-js APP</title>
+        <link rel="stylesheet" href="css/nodejs-app.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="js/nodejs-app.js"></script>
+        
+    </head>
+    <body>
+            <% if (messages.error) { %>
+                <p style="color:red"><%- messages.error %></p>
+            <% } %>
+             
+            <% if (messages.success) { %>
+                <p style="color:green"><%- messages.success %></p>
+            <% } %>
+            <div class="container">
+            
+            <div class="row" style="margin-top:20px">
+                <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+                    <form role="form" method="post" action="/users">
+                        <fieldset>
+                            <h2>Please Sign In</h2>
+                            
+                            <div class="form-group">
+                                <input type="email" name="email" id="email" value="<%= email %>"  class="form-control input-lg" placeholder="Email Address">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="password" id="password" value="<%= password %>" class="form-control input-lg" placeholder="Password">
+                            </div>
+                            
+                            
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-6 col-md-6">
+                                    <input type="submit" class="btn btn-lg btn-success btn-block" value="Sign In">
+                                </div>
+                               
+                            </div>
+
+                           
+                        </fieldset>
+                    </form>
+                    <div class="col-xs-10">
+                            <h2>  Not yet Registered ? <a href="/users/add" >Click Here.</a></h2>
+                           </div>
+                </div>
+
+            </div>
+            
+            </div>
+    </body>
+
+</html>
