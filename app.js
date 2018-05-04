@@ -7,11 +7,13 @@ app.use(function(req, res, next) {
     next();
   });
 var expressMongoDb = require('express-mongo-db');
+
 /**
  * Store database credentials in a separate config.js file
  * Load the file/module and its values
  * For MongoDB, we basically store the connection URL in config file
  */ 
+
 var config = require('./config')
 app.use(expressMongoDb(config.database.url));
  
