@@ -47,9 +47,12 @@ including header content which is common for all pages
     left: -35px;
     content: "✖";
 }
+#error{
+    color: red;
+}
 </style>
-
-<form action="/users/add" method="post" name="form1">
+<p id="error"></p>
+<form action="/users/add" method="post" name="form1" onsubmit="return validateform()">
     <table width="25%" border="0">
         <tr> 
             <td>Name</td>
@@ -139,9 +142,31 @@ including header content which is common for all pages
           length.classList.add("invalid");
         }
       }
-
-
       
+   function validateform(){
+    var name=document.getElementById("name").value;
+    var alphaExp = /^[A-Za-z]+-[^\\s]+/;      
+    var age=document.getElementById("ageTextBox").value;
+    if (!name.match(alphaExp)) {
+        document.getElementById("error").innerHTML="Enter proper name with only alphabets and with one Hypen. Ex : asmit-patil ";
+        return false;
+    }
+    if ((name.length < 5) || (name.length > 15))
+    {
+        document.getElementById("error").innerHTML="Name sholud be greater than 5 characters and less than 16 characters";
+        return false;
+    }
+    //age = parseInt(age, 10);
+
+    //check if age is a number or less than or greater than 100
+    if (isNaN(age) || age < 18 || age > 100)
+    { 
+        document.getElementById("error").innerHTML="The age must be a number between 18 and 100";
+        return false;
+    }
+
+   }   
+ 
       </script>
  
 <!--

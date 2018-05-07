@@ -95,6 +95,8 @@ app.use(flash())
 app.use('/', index)
 app.use('/users', users)
  
-app.listen(3003, function(){
-    console.log('Server running at port 3003: http://127.0.0.1:3003')
+app.listen(3006, function(){
+
+
+    console.log('Server running at port 3006: http://127.0.0.1:3006')
 })

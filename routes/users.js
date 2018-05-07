@@ -92,23 +92,42 @@ mySchema.pre('save', function(next){
     console.log(1)
     if (!user.isModified('password')) return next();
  
-    bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt){
-        if(err) return next(err);
-        console.log(2)
-        bcrypt.hash(user.password, salt, function(err, hash){
-            if(err) return next(err);
-            console.log(3)
-            user.password = hash;
-            next();
-        });
-    });
+    // bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt){
+    //     if(err) return next(err);
+    //     console.log(2)
+    //     bcrypt.hash(user.password, salt, function(err, hash){
+    //         if(err) return next(err);
+    //         console.log(3)
+    //         user.password = hash;
+    //         next();
+    //     });
+    // });
+
+    // if the user has modified their password, let's hash it
+    bcrypt.hash(user.password, 10).then(function(hashedPassword) {
+        // then let's set their password to not be the plain text one anymore, but the newly hashed password
+        var temppass= user.password
+        user.password = hashedPassword
+        // then we save the user in the db!
+        if(User.findOne({password: user.password}))
+        {
+            console.log(12345)
+            bcrypt.hash(temppass,12).then(function(hashedPassword){
+                user.password = hashedPassword
+            })
+        }
+        next();
+    }, function(err){
+        // or we continue and pass in an error that has happened (which our express error handler will catch)
+        return next(err)
+    })
 });
 
 // now let's write an instance method for all of our user documents which will be used to compare a plain text password with a hashed password in the database. Notice the second parameter to this function is a callback function called "next". Just like the code above, we need to run next() to move on.
-mySchema.methods.comparePassword = function(candidatePassword, next) {
+  function comparePassword(candidatePassword, dbpassword,next) {
     console.log(5)
     // when this method is called, compare the plain text password with the password in the database.
-    bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+    bcrypt.compare(candidatePassword, dbpassword, function(err, isMatch) {
         if(err) return next(err);
         // isMatch is a boolean which we will pass to our next function
         console.log(6)
@@ -130,15 +149,7 @@ app.post('/add', function(req, res, next){
         /********************************************
          * Express-validator module
          
-        req.body.comment = 'a <span>comment</spcatch( function(err){
-                req.flash('error', error_msg)        
-                console.log(4)
-                res.render('user/login',{
-                    email: '',
-                    password:''
-                })
-            })
-    an>';
+        req.body.comment = 'a <span>comment</span>';
         req.body.username = '   a user    ';
  
         req.sanitize('comment').escape(); // returns 'a &lt;span&gt;comment&lt;/span&gt;'
@@ -229,48 +240,53 @@ app.post('/login', function(req, res, next){
     if( !errors ) {  
        
            
-            req.db.collection('users').findOne({ email: req.body.email}, function(err, user) {
-                      if(user === null){
-                        res.render('user/login',{
-                            email: '',
-                            password:''
-                        });
-                     }else if (user.email === req.body.email && user.password === req.body.password){
-                        req.flash('success', 'Login successful')
-                     res.redirect('/users');
-                   } else {
-                    req.flash('error', 'Login unsuccessful')
-                     res.render('user/login',{
-                        email: '',
-                        password:''
-                    });
-                   }
-            });
-            
-            // User.findOne({email: req.body.email}).then(function(user){
-            //     user.comparePassword(req.body.password, function(err, isMatch){
-            //         console.log(1)
-            //          if(isMatch){
-            //             console.log(2)
-            //             req.flash('success', 'Login successful')
-            //             res.redirect('/users');
-            //         } else {
-            //             console.log(3)
-            //             req.flash('error', 'Login unsuccessful')
+            // req.db.collection('users').findOne({ email: req.body.email}, function(err, user) {
+            //           if(user === null){
             //             res.render('user/login',{
+            //                 email: '',
+            //                 password:''
+            //             });
+            //          }else if (user.email === req.body.email && user.password === req.body.password){
+            //             req.flash('success', 'Login successful')
+            //          res.redirect('/users');
+            //        } else {
+            //         req.flash('error', 'Login unsuccessful')
+            //          res.render('user/login',{
             //             email: '',
             //             password:''
-            //             });
-            //         }
-            //     })
-            // }).catch( function(err){
-            //     req.flash('error', error_msg)        
-            //     console.log(4)
-            //     res.render('user/login',{
-            //         email: '',
-            //         password:''
-            //     })
-            // })
+            //         });
+            //        }
+            // });
+
+        
+            console.log(req.body.email)
+            //console.log(User.findOne({"email": "ap11@mail.com"}))
+            User.findOne({email: req.body.email}).then(function(user){
+                console.log("then",user,User)
+                comparePassword(req.body.password, user.password, function(err, isMatch){
+                    console.log(1)
+                     if(isMatch){
+                        console.log(2)
+                        req.flash('success', 'Login successful')
+                        res.redirect('/users');
+                    } else {
+                        console.log(3)
+                        req.flash('error', 'Login unsuccessful')
+                        res.render('user/login',{
+                        email: '',
+                        password:''
+                        });
+                    }
+                })
+            }).catch( function(err){
+                console.log(err)
+                req.flash('error', error_msg)        
+                console.log(4)
+                res.render('user/login',{
+                    email: '',
+                    password:''
+                })
+            })
     
         
         
