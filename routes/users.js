@@ -5,8 +5,8 @@ var bcrypt = require('bcrypt');
 var mongoose = require('mongoose')
 mongoose.Promise = Promise
 var MongoClient = require('mongodb').MongoClient;
-var url = 'mongodb://localhost:27017/testDB2';
-var SALT_WORK_FACTOR = 10;
+//var url = 'mongodb://localhost:27017/testDB2';
+//var SALT_WORK_FACTOR = 10;
 // SHOW LIST OF USERS
 app.get('/', function(req, res, next) {    
     // fetch and sort users collection by id in descending order
@@ -48,6 +48,7 @@ app.get('/login', function(req, res, next){
         password:''       
     })
 })
+
 
 
 
@@ -155,29 +156,7 @@ app.post('/add', function(req, res, next){
         req.sanitize('comment').escape(); // returns 'a &lt;span&gt;comment&lt;/span&gt;'
         req.sanitize('username').trim(); // returns 'a user'
         ********************************************/
-        // var user1 = {
-        //     name: req.sanitize('name').escape().trim(),
-        //     age: req.sanitize('age').escape().trim(),
-        //     email: req.sanitize('email').escape().trim(),
-        //     password: req.sanitize('password').escape().trim()
-        // }
-        // console.log(user1.email) 
-        // req.db.collection('users').findOne({ email: req.body.email}, function(err, user1) {
-        //     console.log(user1.email)        
-        //         if(user1.email == req.body.email){
-        //         req.flash('error', 'This email is already registered, Please login with unique email')
-               
-        //         // render to views/user/add.ejs
-        //         res.render('user/add', {
-        //             title: 'Add New User',
-        //             name: '',
-        //             age: '',
-        //             email:'',
-        //             password:''                   
-        //         })
-        //     }
-            
-        // })
+        
         var user = new User({
             name: req.sanitize('name').escape().trim(),
             age: req.sanitize('age').escape().trim(),
@@ -238,31 +217,10 @@ app.post('/login', function(req, res, next){
     req.assert('password','Password is required').notEmpty()    //Validate password
     var errors = req.validationErrors()
     if( !errors ) {  
-       
-           
-            // req.db.collection('users').findOne({ email: req.body.email}, function(err, user) {
-            //           if(user === null){
-            //             res.render('user/login',{
-            //                 email: '',
-            //                 password:''
-            //             });
-            //          }else if (user.email === req.body.email && user.password === req.body.password){
-            //             req.flash('success', 'Login successful')
-            //          res.redirect('/users');
-            //        } else {
-            //         req.flash('error', 'Login unsuccessful')
-            //          res.render('user/login',{
-            //             email: '',
-            //             password:''
-            //         });
-            //        }
-            // });
-
-        
-            console.log(req.body.email)
+           // console.log(req.body.email)
             //console.log(User.findOne({"email": "ap11@mail.com"}))
             User.findOne({email: req.body.email}).then(function(user){
-                console.log("then",user,User)
+               // console.log("then",user,User)
                 comparePassword(req.body.password, user.password, function(err, isMatch){
                     console.log(1)
                      if(isMatch){
@@ -322,12 +280,12 @@ app.get('/edit/(:id)', function(req, res, next){
             // render to views/user/edit.ejs template file
             res.render('user/edit', {
                 title: 'Edit User', 
-                //data: rows[0],
+               
                 id: result[0]._id,
                 name: result[0].name,
                 age: result[0].age,
                 email: result[0].email ,
-                password:result[0].password                   
+                         
             })
         }
     })    
