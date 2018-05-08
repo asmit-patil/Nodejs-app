@@ -6,7 +6,8 @@ var mongoose = require('mongoose')
 mongoose.Promise = Promise
 var MongoClient = require('mongodb').MongoClient;
 //var url = 'mongodb://localhost:27017/testDB2';
-//var SALT_WORK_FACTOR = 10;
+
+//console.log(SALT_WORK_FACTOR)
 // SHOW LIST OF USERS
 app.get('/', function(req, res, next) {    
     // fetch and sort users collection by id in descending order
@@ -103,20 +104,20 @@ mySchema.pre('save', function(next){
     //         next();
     //     });
     // });
-
+    var SALT_WORK_FACTOR = Math.floor(Math.random() * 20);
     // if the user has modified their password, let's hash it
-    bcrypt.hash(user.password, 10).then(function(hashedPassword) {
+    bcrypt.hash(user.password,SALT_WORK_FACTOR ).then(function(hashedPassword) {
         // then let's set their password to not be the plain text one anymore, but the newly hashed password
-        var temppass= user.password
+        //var temppass= user.password
         user.password = hashedPassword
-        // then we save the user in the db!
-        if(User.findOne({password: user.password}))
-        {
-            console.log(12345)
-            bcrypt.hash(temppass,12).then(function(hashedPassword){
-                user.password = hashedPassword
-            })
-        }
+
+        // if(User.findOne({password: user.password}))
+        // {
+        //     console.log(12345)
+        //     bcrypt.hash(temppass,12).then(function(hashedPassword){
+        //         user.password = hashedPassword
+        //     })
+        // }
         next();
     }, function(err){
         // or we continue and pass in an error that has happened (which our express error handler will catch)
