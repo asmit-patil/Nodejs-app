@@ -1,7 +1,7 @@
 var express = require('express')
 var app = express()
 
-
+const port = process.env.PORT || 3003;
 app.use(function(req, res, next) {
     res.setHeader('Author', 'Asmit-Patil')
     next();
@@ -95,8 +95,8 @@ app.use(flash())
 app.use('/', index)
 app.use('/users', users)
  
-app.listen(3003, function(){
+app.listen(port, function(){
 
 
-    console.log('Server running at port 3003: http://127.0.0.1:3003')
+    console.log(`Server running at port ${port}: http://127.0.0.1:${port}`)
 })
